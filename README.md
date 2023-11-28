@@ -5,7 +5,7 @@
 
 Here we think about a shortcut to a first looks at networks using a
 flat, edgelist input that leads straight to a ggplot2 plot (ggraph)
-space; this will uses tidygraph and ggraph under the hood…
+space; this uses {tidygraph} and {ggraph} under the hood…
 
 ## Step 00 Before getting into it, create an ‘interesting’ edge list
 
@@ -101,7 +101,7 @@ ggedgelist <- function(edgelist, nodelist = NULL, ...)(
     if(is.null(nodelist)){
     edgelist %>% 
     tidygraph::as_tbl_graph() %>% 
-    ggraph(...) 
+    ggraph::ggraph(...) 
     
   }else{ # join on nodes attributes if they are available
     
@@ -110,43 +110,43 @@ ggedgelist <- function(edgelist, nodelist = NULL, ...)(
     edgelist %>% 
     tidygraph::as_tbl_graph() %>%
     dplyr::full_join(nodelist) %>% 
-    ggraph(...) 
+    ggraph::ggraph(...) 
     
   }
   
 )
 
 # get a fill viz w edgelist dataframe only
-quick_ggedgelist <- function(edgelist, nodelist = NULL, include_names = F,  ...){
+ggedgelist_quick <- function(edgelist, nodelist = NULL, include_names = F,  ...){
   
 
   p <- ggedgelist(edgelist = edgelist,
                   nodelist = nodelist, ...) +
-  geom_edge_link(color = "orange") +
-  geom_node_point(size = 9,
+  ggraph::geom_edge_link(color = "orange") +
+  ggraph::geom_node_point(size = 9,
                   color = "steelblue",
                   alpha = .8) 
   
-  if(include_names){p + geom_node_label(aes(label = name))}else{p}
+  if(include_names){p + ggraph::geom_node_label(aes(label = name))}else{p}
   
 }
 
 geom_node_label_auto <- function(...){ 
   
-  geom_node_label(aes(label = name), ...)
+  ggraph::geom_node_label(aes(label = name), ...)
   
 }
 
 geom_node_text_auto <- function(...){ 
   
-  geom_node_text(aes(label = name), ...)
+  ggraph::geom_node_text(aes(label = name), ...)
   
 }
 ```
 
 # examples w/ proposed functions
 
-## `quick_ggedgelist()`
+## `ggedgelist_quick()`
 
 ``` r
 head(edge_list)
@@ -166,13 +166,13 @@ head(node_info)
 #> 5        E      TRUE
 #> 6        F     FALSE
 edge_list %>% 
-  quick_ggedgelist() 
+  ggedgelist_quick() 
 
 edge_list %>% 
-  quick_ggedgelist(include_names = T) 
+  ggedgelist_quick(include_names = T) 
 
 edge_list %>% 
-  quick_ggedgelist(nodelist = node_info) + 
+  ggedgelist_quick(nodelist = node_info) + 
   geom_node_point(aes(color = ind_child), size = 10)
 ```
 
@@ -232,16 +232,16 @@ ggflowchart_example %>%
 
 ``` r
 ggflowchart_example %>% 
-  quick_ggedgelist(layout = "stress", 
+  ggedgelist_quick(layout = "stress", 
                    include_names = T)
 
 ggflowchart_example %>% 
-  quick_ggedgelist(layout = "tree", 
+  ggedgelist_quick(layout = "tree", 
                    include_names = T)
 
 # auto which is default also produces three in this case
 ggflowchart_example %>% 
-  quick_ggedgelist(layout = "auto") 
+  ggedgelist_quick(layout = "auto") 
 
 layer_data(last_plot(), i = 2)
 #>    x y PANEL group shape    colour size fill alpha stroke
@@ -332,6 +332,8 @@ usethis::use_package("ggraph")
 #> • Refer to functions with `ggraph::fun()`
 usethis::use_package("tidygraph")
 #> • Refer to functions with `tidygraph::fun()`
+usethis::use_package("dplyr")
+#> • Refer to functions with `dplyr::fun()`
 ```
 
 ### Chosen a license? ✅

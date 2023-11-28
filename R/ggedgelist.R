@@ -6,7 +6,7 @@ ggedgelist <- function(edgelist, nodelist = NULL, ...)(
     if(is.null(nodelist)){
     edgelist %>% 
     tidygraph::as_tbl_graph() %>% 
-    ggraph(...) 
+    ggraph::ggraph(...) 
     
   }else{ # join on nodes attributes if they are available
     
@@ -15,35 +15,35 @@ ggedgelist <- function(edgelist, nodelist = NULL, ...)(
     edgelist %>% 
     tidygraph::as_tbl_graph() %>%
     dplyr::full_join(nodelist) %>% 
-    ggraph(...) 
+    ggraph::ggraph(...) 
     
   }
   
 )
 
 # get a fill viz w edgelist dataframe only
-quick_ggedgelist <- function(edgelist, nodelist = NULL, include_names = F,  ...){
+ggedgelist_quick <- function(edgelist, nodelist = NULL, include_names = F,  ...){
   
 
   p <- ggedgelist(edgelist = edgelist,
                   nodelist = nodelist, ...) +
-  geom_edge_link(color = "orange") +
-  geom_node_point(size = 9,
+  ggraph::geom_edge_link(color = "orange") +
+  ggraph::geom_node_point(size = 9,
                   color = "steelblue",
                   alpha = .8) 
   
-  if(include_names){p + geom_node_label(aes(label = name))}else{p}
+  if(include_names){p + ggraph::geom_node_label(aes(label = name))}else{p}
   
 }
 
 geom_node_label_auto <- function(...){ 
   
-  geom_node_label(aes(label = name), ...)
+  ggraph::geom_node_label(aes(label = name), ...)
   
 }
 
 geom_node_text_auto <- function(...){ 
   
-  geom_node_text(aes(label = name), ...)
+  ggraph::geom_node_text(aes(label = name), ...)
   
 }
